@@ -67,7 +67,8 @@ app.post('/webhook', async (req, res) => {
                 const senderId = messaging_event.sender.id;
                 const messageText = messaging_event.message ? messaging_event.message.text : '';
 
-                console.log(`Message from <span class="math-inline">\{senderId\}\: "</span>{messageText}"`);
+                // CORRECTED: Use backticks for template literal
+                console.log(`Message from ${senderId}: "${messageText}"`);
 
                 if (messaging_event.message && !messaging_event.message.is_echo) {
                     if (messageText) {
@@ -113,13 +114,15 @@ async function getOpenAIAssistantResponse(userMessage) {
     try {
         // 1. Create a new thread
         console.log("Creating new thread...");
+        // CORRECTED: Use backticks for template literal
         const threadResponse = await axios.post(`${openaiApiUrl}/threads`, {}, { headers });
         const threadId = threadResponse.data.id;
         console.log(`Thread created with ID: ${threadId}`);
 
         // 2. Add a message to the thread
         console.log("Adding message to thread...");
-        await axios.post(`<span class="math-inline">\{openaiApiUrl\}/threads/</span>{threadId}/messages`,
+        // CORRECTED: Use backticks for template literal
+        await axios.post(`${openaiApiUrl}/threads/${threadId}/messages`,
             {
                 role: "user",
                 content: userMessage
@@ -130,7 +133,8 @@ async function getOpenAIAssistantResponse(userMessage) {
 
         // 3. Run the Assistant on the thread
         console.log("Running Assistant...");
-        const runResponse = await axios.post(`<span class="math-inline">\{openaiApiUrl\}/threads/</span>{threadId}/runs`,
+        // CORRECTED: Use backticks for template literal
+        const runResponse = await axios.post(`${openaiApiUrl}/threads/${threadId}/runs`,
             { assistant_id: OPENAI_ASSISTANT_ID },
             { headers }
         );
@@ -141,7 +145,8 @@ async function getOpenAIAssistantResponse(userMessage) {
         let runStatus;
         do {
             await delay(1000); // Wait for 1 second before polling again
-            const statusResponse = await axios.get(`<span class="math-inline">\{openaiApiUrl\}/threads/</span>{threadId}/runs/${runId}`, { headers });
+            // CORRECTED: Use backticks for template literal
+            const statusResponse = await axios.get(`${openaiApiUrl}/threads/${threadId}/runs/${runId}`, { headers });
             runStatus = statusResponse.data.status;
             console.log(`Run status: ${runStatus}`);
         } while (runStatus !== 'completed' && runStatus !== 'failed' && runStatus !== 'cancelled' && runStatus !== 'expired');
@@ -152,7 +157,8 @@ async function getOpenAIAssistantResponse(userMessage) {
 
         // 5. Retrieve messages from the thread to get the Assistant's response
         console.log("Retrieving messages from thread...");
-        const messagesResponse = await axios.get(`<span class="math-inline">\{openaiApiUrl\}/threads/</span>{threadId}/messages`, { headers });
+        // CORRECTED: Use backticks for template literal
+        const messagesResponse = await axios.get(`${openaiApiUrl}/threads/${threadId}/messages`, { headers });
         const messages = messagesResponse.data.data;
 
         // Find the latest message from the assistant
@@ -194,7 +200,7 @@ async function sendInstagramMessage(recipientId, text) {
             }
         );
     } catch (error) {
-        console.error('Error sending message to Instagram:', error.response ? error.response.data : error.message);
+    console.error('Error sending message to Instagram:', error.response ? error.response.data : error.message);
         throw new Error('Failed to send message to Instagram.');
     }
 }
