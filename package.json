@@ -1,9 +1,9 @@
 {
   "name": "instagram_ai_bot_js",
   "version": "1.0.0",
-  "main": "server.js",        <-- CHANGE THIS from "index.js" to "server.js"
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",  <-- ADD THIS LINE
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
